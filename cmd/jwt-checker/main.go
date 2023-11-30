@@ -1,16 +1,26 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 
 	attack "github.com/ksw9722/jwt-checker/pkg/JwtAttacker/attacktype"
 )
 
 func main() {
-	fmt.Println("Hello World")
-	tokenString := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJiYXIiLCJleHAiOjE1MDAwLCJpc3MiOiJ0ZXN0In0.HE7fK0xOQwFEr4WDgRWj4teRPZ6i3GLwD5YCm6Pwu_c"
-	test := attack.NonAlgorithm(tokenString)
-	fmt.Println(test)
-	test.Attack()
+	var (
+		tokenString = flag.String("t", "", "JWT 토큰 입력")
+		method      = flag.String("m", "none", "공격 타입")
+	)
+	flag.Parse()
+
+	switch *method {
+	case "none": // JWT NONE 알고리즘 공격
+		attackObject := attack.NonAlgorithm(*tokenString)
+		attackObject.Attack("dummy")
+	default:
+		fmt.Println("[-] 현재 지원하지 않는 공격 타입을 입력하였습니다.")
+		return
+	}
 
 }
